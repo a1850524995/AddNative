@@ -2,13 +2,16 @@ package com.chinaso.addnative;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TAG = "MainActivity";
     Button staticRegister ;
     Button dynamicRegister ;
+
     TextView tv ;
     static {
         System.loadLibrary("native-lib");
@@ -36,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public static void methodCalledByJni(String msgFromJNI) {
+        Log.e(TAG, msgFromJNI);
     }
 
 

@@ -1,10 +1,24 @@
 //
 // Created by Administrator on 2019-05-05.
 //
+#include <iostream>
 #include "com_chinaso_addnative_Register.h"
 jstring  Java_com_chinaso_addnative_Register_staticRegister
         (JNIEnv *jniEnv, jclass ){
     return jniEnv->NewStringUTF("static Register");
+}
+void callJavaMethod (JNIEnv *env, jobject thiz) {
+    jclass clazz = env->FindClass("com/chinaso/addnative/MainActivity");//在哪个类中
+    if (clazz == NULL) {
+        std::cout << "find class MainActivity error" <<std::endl;
+        return;
+    }
+    jmethodID id = env->GetStaticMethodID(clazz, "methodCalledByJni","(Ljava/lang/String;)V");//找到方法ID和签名
+    if (id == NULL) {
+        std::cout << "find method methodCalledByJni error" <<std::endl;
+    }
+    jstring msg = env->NewStringUTF("called JavaMethod");
+    env->CallStaticVoidMethod(clazz, id, msg);//调用
 }
 /**
  * 可以自己随便命名的本地方法，只需要在对应的数据结构中注册
@@ -14,6 +28,7 @@ jstring  Java_com_chinaso_addnative_Register_staticRegister
  */
 jstring dynamic_register(JNIEnv *env,jobject jobj){
     char* str = "dynamic register";
+    callJavaMethod(env, jobj);//调用java层的方法。
     return env->NewStringUTF(str);
 }
 /**
@@ -48,3 +63,4 @@ JNIEXPORT int JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     result = JNI_VERSION_1_6;
     return result;
 }
+
